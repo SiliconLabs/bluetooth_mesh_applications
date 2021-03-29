@@ -56,6 +56,9 @@ sl_status_t sl_btmesh_data_log_client_set_period(
                 sl_btmesh_data_log_period_t *period);
 sl_status_t sl_btmesh_data_log_client_set_sample_rate(
                 sl_btmesh_data_log_sample_rate_t *rate);
+sl_status_t sl_btmesh_data_log_client_set_raw(
+                sl_btmesh_data_log_raw_t *raw);
+sl_status_t sl_btmesh_data_log_client_reset_log(void);
 #endif // SL_BTMESH_DATA_LOGGING_CLIENT_H
 
 #ifdef __cplusplus

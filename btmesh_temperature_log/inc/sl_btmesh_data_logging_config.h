@@ -52,7 +52,7 @@ extern "C" {
 /// Timeout value in MS
 #define SL_BTMESH_DATA_LOG_TIMEOUT_MS_CFG_VAL   (3000)
 /// Time delay value for send response in MS
-#define SL_BTMESH_DATA_LOG_RESP_MS_CFG_VAL      (50)
+#define SL_BTMESH_DATA_LOG_RESP_MS_CFG_VAL      (1)
 
 /// Sample rate in MS
 #define SL_BTMESH_DATA_LOG_SAMPLE_RATE_MS_CFG_VAL   (1000)

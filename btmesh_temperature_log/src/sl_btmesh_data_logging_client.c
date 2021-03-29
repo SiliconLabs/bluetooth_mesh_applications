@@ -42,6 +42,11 @@ extern "C" {
 #include "sl_btmesh_data_logging_client.h"
 #include "em_common.h"
 
+// Reset Log
+#define SLI_RESET_LOG \
+          sli_data_log_ptr->index = SL_BTMESH_DATA_LOG_RESET_VAL; \
+          sli_recv_status = SL_BTMESH_DATA_LOG_IDLE
+
 /// Data logging structure
 static sl_data_log_t *sli_data_log_ptr = NULL;
 
@@ -54,11 +59,6 @@ static void sli_btmesh_data_log_recv_timeout_callback(
             sl_sleeptimer_timer_handle_t *handle,
             void *data);
 
-/// Response timer callback
-static void sli_btmesh_data_log_resp_timer_callback(
-            sl_sleeptimer_timer_handle_t *handle,
-            void *data);
-
 /// Counter for the log receive
 static uint8_t sli_recv_status;
 
@@ -67,13 +67,6 @@ static sl_sleeptimer_timer_handle_t sli_data_log_timeout_timer;
 
 /// Timer for send response
 static sl_sleeptimer_timer_handle_t sli_data_log_resp_timer;
-
-/// Used for send response
-static uint16_t   sli_elem_index;
-static uint16_t   sli_source_address;
-static int8_t     sli_va_index;
-static uint16_t   sli_appkey_index;
-static uint8_t    sli_nonrelayed;
 
 sl_status_t sl_btmesh_data_log_client_init(sl_data_log_t *data_log_ptr)
 {
@@ -89,7 +82,7 @@ sl_status_t sl_btmesh_data_log_client_init(sl_data_log_t *data_log_ptr)
 
     if(SL_STATUS_OK == st){
       // Clear log
-      sli_data_log_ptr->index = 0;
+      sli_data_log_ptr->index = SL_BTMESH_DATA_LOG_RESET_VAL;
       if(NULL != sli_data_log_ptr->data){
         memset(sli_data_log_ptr->data,
                SL_BTMESH_DATA_LOG_CLEAR_VAL,
@@ -117,36 +110,20 @@ sl_status_t sl_btmesh_data_log_client_deinit(void)
                                        SL_BTMESH_DATA_LOG_MODEL_CLIENT_ID);
 }
 
-static sl_status_t sli_btmesh_data_log_receive_handler(
-              sl_btmesh_msg_t *evt)
+static sl_status_t sli_btmesh_data_log_receive_handler(sl_btmesh_msg_t *evt)
 {
   sl_status_t st;
-
   sl_btmesh_evt_vendor_model_receive_t *log_evt =
           &(evt->data.evt_vendor_model_receive);
 
   // Receive length
   uint8_t recv_len = log_evt->payload.len - SL_BTMESH_BYTE_FLAG_LEN;
   // Point to received data
-  sl_data_frame_t *frame = (sl_data_frame_t *)&(
+  sl_data_frame_t *frame;
+  frame = (sl_data_frame_t *)&(
       log_evt->payload.data[SL_BTMESH_BYTE_FLAG_POS+SL_BTMESH_BYTE_FLAG_LEN]);
 
-  if((SL_BTMESH_DATA_LOG_IDLE == sli_recv_status)
-      || (SL_BTMESH_DATA_LOG_COMPLETE == sli_recv_status)){
-      sli_recv_status = SL_BTMESH_DATA_LOG_BUSY;
-      // Start timer
-      st = sl_sleeptimer_start_timer_ms(&sli_data_log_timeout_timer,
-                                  SL_BTMESH_DATA_LOG_TIMEOUT_MS_CFG_VAL,
-                                  &sli_btmesh_data_log_recv_timeout_callback,
-                                  NO_CALLBACK_DATA,
-                                  HIGH_PRIORITY,
-                                  NO_FLAGS);
-      if(SL_STATUS_OK != st){
-          return st;
-      }
-  }
-  sl_data_log_index_t index = sli_data_log_ptr->index
-                              + recv_len/sizeof(sl_data_log_data_t);
+  sl_data_log_index_t index = sli_data_log_ptr->index;
   if(index < SL_BTMESH_DATA_LOG_BUFF_SIZE_CFG_VAL){
       // Copy received data
       if(NULL == (uint8_t *)memcpy(((uint8_t *)&sli_data_log_ptr->data[index]),
@@ -156,34 +133,38 @@ static sl_status_t sli_btmesh_data_log_receive_handler(
           return SL_STATUS_ALLOCATION_FAILED;
       }
       // Update new index
-      sli_data_log_ptr->index = index;
+      sli_data_log_ptr->index = index + recv_len/sizeof(sl_data_log_data_t);
   } else { return SL_STATUS_FULL; }
-
-  // Trigger timer to send response massage
-  sli_source_address = log_evt->source_address;
-  sli_va_index = log_evt->va_index;
-  sli_appkey_index = log_evt->appkey_index;
-  sli_elem_index = log_evt->elem_index;
-  sli_nonrelayed = log_evt->nonrelayed;
-
-  st = sl_sleeptimer_start_timer_ms(&sli_data_log_resp_timer,
-                                  SL_BTMESH_DATA_LOG_RESP_MS_CFG_VAL,
-                                  &sli_btmesh_data_log_resp_timer_callback,
-                                  NO_CALLBACK_DATA,
-                                  HIGH_PRIORITY,
-                                  NO_FLAGS);
-
-  if(SL_STATUS_OK != st){
-      return st;
-  }
 
   uint8_t last_seg = log_evt->payload.data[SL_BTMESH_BYTE_FLAG_POS];
   if(SL_BTMESH_DATA_LOG_LAST == last_seg){
       sli_recv_status = SL_BTMESH_DATA_LOG_COMPLETE;
       // Stop timeout timer
-      st = sl_sleeptimer_stop_timer(&sli_data_log_timeout_timer);
+      bool timer_running;
+      st = sl_sleeptimer_is_timer_running(&sli_data_log_timeout_timer,
+                                         &timer_running);
+      if(SL_STATUS_OK == st){
+        if(timer_running){
+            st = sl_sleeptimer_stop_timer(&sli_data_log_timeout_timer);
+        }
+      }
       // Execute complete callback
       sl_btmesh_data_log_client_recv_complete_callback();
+  } else if((SL_BTMESH_DATA_LOG_IDLE == sli_recv_status)
+      || (SL_BTMESH_DATA_LOG_COMPLETE == sli_recv_status)){
+      sli_recv_status = SL_BTMESH_DATA_LOG_BUSY;
+      // Start timeout timer
+      st = sl_sleeptimer_start_timer_ms(&sli_data_log_timeout_timer,
+                                  SL_BTMESH_DATA_LOG_TIMEOUT_MS_CFG_VAL,
+                                  &sli_btmesh_data_log_recv_timeout_callback,
+                                  NO_CALLBACK_DATA,
+                                  HIGH_PRIORITY,
+                                  NO_FLAGS);
+      if(SL_STATUS_OK != st){
+          // Error occurs, Reset Log
+          SLI_RESET_LOG;
+          return st;
+      }
   } else { st = SL_STATUS_OK; }
 
   return st;
@@ -192,6 +173,7 @@ static sl_status_t sli_btmesh_data_log_receive_handler(
 sl_status_t sl_btmesh_data_log_on_client_receive_event(
         sl_btmesh_msg_t *evt)
 {
+  sl_status_t st;
   sl_btmesh_evt_vendor_model_receive_t *log_evt =
           &(evt->data.evt_vendor_model_receive);
 
@@ -199,10 +181,30 @@ sl_status_t sl_btmesh_data_log_on_client_receive_event(
       &&(SL_BTMESH_DATA_LOG_MODEL_CLIENT_ID == log_evt->model_id)
       &&(SL_BTMESH_DATA_LOG_ELEMENT_CFG_VAL == log_evt->elem_index)
       && (SL_BTMESH_DATA_LOG_MESSAGE_STATUS_ID == log_evt->opcode)){
-      return sli_btmesh_data_log_receive_handler(evt);
-  }
+    uint8_t tmp_buff[SL_BTMESH_DATA_LOG_PROP_LEN];
 
-  return SL_STATUS_OK;
+    // Handle received data
+    st = sli_btmesh_data_log_receive_handler(evt);
+    if(SL_STATUS_OK == st){
+      // Send response
+      st = sl_btmesh_vendor_model_send(log_evt->source_address,
+                                 log_evt->va_index,
+                                 log_evt->appkey_index,
+                                 log_evt->elem_index,
+                                 SL_BTMESH_VENDOR_ID,
+                                 SL_BTMESH_DATA_LOG_MODEL_CLIENT_ID,
+                                 log_evt->nonrelayed,
+                                 SL_BTMESH_DATA_LOG_MESSAGE_STATUS_RSP_ID,
+                                 SL_BTMESH_SEGMENT_FINAL,
+                                 SL_BTMESH_DATA_LOG_MESSAGE_STATUS_RSP_LEN,
+                                 (const uint8_t *)tmp_buff);
+      if(SL_STATUS_OK == st){
+          sl_app_log("Sent Status response\r\n");
+      }
+    }
+  } else { st = SL_STATUS_OK; }
+
+  return st;
 }
 
 sl_status_t sl_btmesh_data_log_client_set_period(
@@ -319,32 +321,22 @@ static void sli_btmesh_data_log_recv_timeout_callback(
 
   // Receive timeout
   if(SL_BTMESH_DATA_LOG_BUSY == sli_recv_status){
-      sli_data_log_ptr->index = 0;
+      sli_data_log_ptr->index = SL_BTMESH_DATA_LOG_RESET_VAL;
       sli_recv_status = SL_BTMESH_DATA_LOG_IDLE;
       sl_app_log("Log receive timeout!\r\n");
   }
 }
 
-static void sli_btmesh_data_log_resp_timer_callback(
-            sl_sleeptimer_timer_handle_t *handle,
-            void *data)
+sl_status_t sl_btmesh_data_log_client_reset_log(void)
 {
-  (void)handle;
-  (void)data;
+  if(SL_BTMESH_DATA_LOG_BUSY != sli_recv_status){
+      if(NULL != sli_data_log_ptr){
+          SLI_RESET_LOG;
+          return SL_STATUS_OK;
+      } else { return SL_STATUS_NOT_INITIALIZED; }
+  }
 
-  uint8_t tmp_buff[SL_BTMESH_DATA_LOG_PROP_LEN];
-
-  sl_btmesh_vendor_model_send(sli_source_address,
-                             sli_va_index,
-                             sli_appkey_index,
-                             sli_elem_index,
-                             SL_BTMESH_VENDOR_ID,
-                             SL_BTMESH_DATA_LOG_MODEL_CLIENT_ID,
-                             sli_nonrelayed,
-                             SL_BTMESH_DATA_LOG_MESSAGE_STATUS_RSP_ID,
-                             SL_BTMESH_SEGMENT_FINAL,
-                             SL_BTMESH_DATA_LOG_MESSAGE_STATUS_RSP_LEN,
-                             (const uint8_t *)tmp_buff);
+  return SL_STATUS_BUSY;
 }
 
 SL_WEAK void sl_btmesh_data_log_client_recv_complete_callback(void)

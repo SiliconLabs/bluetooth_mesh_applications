@@ -113,6 +113,9 @@ extern "C" {
 /// Max Data length of the properties in byte
 #define SL_BTMESH_DATA_LOG_PROP_LEN       4
 
+/// Reset value
+#define SL_BTMESH_DATA_LOG_RESET_VAL      (0)
+
 /// Type of the Data Logging element index
 typedef uint16_t sl_data_log_index_t;
 

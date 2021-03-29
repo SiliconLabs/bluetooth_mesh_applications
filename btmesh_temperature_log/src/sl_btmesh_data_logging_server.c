@@ -118,7 +118,7 @@ sl_status_t sl_btmesh_data_log_server_init(void)
 
   if(SL_STATUS_OK == st){
     // Clear log
-    sli_data_log_inst.index = 0;
+    sli_data_log_inst.index = SL_BTMESH_DATA_LOG_RESET_VAL;
     memset(sli_data_log_inst.data,
            SL_BTMESH_DATA_LOG_CLEAR_VAL,
            SL_BTMESH_DATA_LOG_BUFF_SIZE_CFG_VAL*sizeof(sl_data_log_data_t));
@@ -127,7 +127,7 @@ sl_status_t sl_btmesh_data_log_server_init(void)
   }
 
   // Reset transmission counter
-  sli_send_count = 0;
+  sli_send_count = SL_BTMESH_DATA_LOG_RESET_VAL;
 
   // Reset transmission status
   sli_send_status = SL_BTMESH_DATA_LOG_IDLE;
@@ -137,7 +137,7 @@ sl_status_t sl_btmesh_data_log_server_init(void)
 
 sl_status_t sl_btmesh_data_log_server_deinit(void)
 {
-  sli_send_count = 0;
+  sli_send_count = SL_BTMESH_DATA_LOG_RESET_VAL;
   // Stop timers
   sl_sleeptimer_stop_timer(&sli_data_log_timeout_timer);
   sl_sleeptimer_stop_timer(&sli_data_log_sample_timer);
@@ -250,7 +250,7 @@ sl_status_t sli_btmesh_data_log_send_handler(void)
       if(SL_BTMESH_DATA_LOG_IDLE == sli_send_status){
           sli_send_status = SL_BTMESH_DATA_LOG_BUSY;
           // Start sending from the beginning of the log
-          sli_send_index = 0;
+          sli_send_index = SL_BTMESH_DATA_LOG_RESET_VAL;
 
           // Start timer
           st = sl_sleeptimer_start_timer_ms(&sli_data_log_timeout_timer,
@@ -278,7 +278,7 @@ sl_status_t sli_btmesh_data_log_send_handler(void)
               sli_send_count--;
           } else { // Send failed
               // Reset transmission
-              sli_send_count = 0;
+              sli_send_count = SL_BTMESH_DATA_LOG_RESET_VAL;
               sli_send_status = SL_BTMESH_DATA_LOG_IDLE;
               sl_app_log("Failed to send Log\r\n");
               return st;
@@ -294,7 +294,7 @@ sl_status_t sli_btmesh_data_log_send_handler(void)
               sli_send_count--;
           } else { // Send fail
               // Reset transmission
-              sli_send_count = 0;
+              sli_send_count = SL_BTMESH_DATA_LOG_RESET_VAL;
               sli_send_status = SL_BTMESH_DATA_LOG_IDLE;
               sl_app_log("Failed to send Log\r\n");
               return st;
@@ -302,7 +302,7 @@ sl_status_t sli_btmesh_data_log_send_handler(void)
       }
   } else if(SL_BTMESH_DATA_LOG_BUSY == sli_send_status){
       // Reset log
-      sli_data_log_inst.index = 0;
+      sli_data_log_inst.index = SL_BTMESH_DATA_LOG_RESET_VAL;
       sli_send_status = SL_BTMESH_DATA_LOG_IDLE;
       sl_sleeptimer_stop_timer(&sli_data_log_timeout_timer);
       sl_btmesh_data_log_complete_callback();
@@ -348,7 +348,7 @@ sl_status_t sl_btmesh_data_log_append(sl_data_log_data_t *data)
 sl_status_t sl_btmesh_data_log_reset(void)
 {
   if(SL_BTMESH_DATA_LOG_IDLE == sli_send_status){
-      sli_data_log_inst.index = 0;
+      sli_data_log_inst.index = SL_BTMESH_DATA_LOG_RESET_VAL;
   } else {
       return SL_STATUS_BUSY;
   }
@@ -395,7 +395,7 @@ static void sli_btmesh_data_log_timeout_callback(
 
   // Transmission timeout
   if(SL_BTMESH_DATA_LOG_BUSY == sli_send_status){
-      sli_send_count = 0;
+      sli_send_count = SL_BTMESH_DATA_LOG_RESET_VAL;
       sli_send_status = SL_BTMESH_DATA_LOG_IDLE;
       sl_app_log("Log sending timeout!\r\n");
   }
