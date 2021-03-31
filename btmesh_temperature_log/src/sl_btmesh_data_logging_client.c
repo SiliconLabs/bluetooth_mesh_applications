@@ -68,6 +68,14 @@ static sl_sleeptimer_timer_handle_t sli_data_log_timeout_timer;
 /// Timer for send response
 static sl_sleeptimer_timer_handle_t sli_data_log_resp_timer;
 
+/***************************************************************************//**
+ * Initialize the data log client.
+ *
+ * @param[in] data_log_ptr Pointer to Log data instance.
+ *
+ * @return SL_STATUS_OK if successful. Error code otherwise.
+ *
+ ******************************************************************************/
 sl_status_t sl_btmesh_data_log_client_init(sl_data_log_t *data_log_ptr)
 {
   sl_status_t st;
@@ -99,6 +107,12 @@ sl_status_t sl_btmesh_data_log_client_init(sl_data_log_t *data_log_ptr)
   return st;
 }
 
+/***************************************************************************//**
+ * De-Initialize the data log client.
+ *
+ * @return SL_STATUS_OK if successful. Error code otherwise.
+ *
+ ******************************************************************************/
 sl_status_t sl_btmesh_data_log_client_deinit(void)
 {
   sli_recv_status = SL_BTMESH_DATA_LOG_IDLE;
@@ -110,6 +124,18 @@ sl_status_t sl_btmesh_data_log_client_deinit(void)
                                        SL_BTMESH_DATA_LOG_MODEL_CLIENT_ID);
 }
 
+/***************************************************************************//**
+ * Handle receiving packages using vendor model.
+ *
+ * @param[in] evt Pointer to btmesh message.
+ *
+ * Start of receiving handler will trigger a timeout timer. Within the timeout,
+ * if packages received completely, a callback function will be call. Otherwise,
+ * a timeout occurs and the Log will be reset.
+ *
+ * @return SL_STATUS_OK if successful. Error code otherwise.
+ *
+ ******************************************************************************/
 static sl_status_t sli_btmesh_data_log_receive_handler(sl_btmesh_msg_t *evt)
 {
   sl_status_t st;
@@ -170,6 +196,19 @@ static sl_status_t sli_btmesh_data_log_receive_handler(sl_btmesh_msg_t *evt)
   return st;
 }
 
+/***************************************************************************//**
+ * Handle event of the Log client.
+ *
+ * @param[in] evt Pointer to btmesh message.
+ *
+ * Handle event of the Vendor model. If there's valid opcode received then
+ * receiving handler will be called.
+ *
+ * @return SL_STATUS_OK if successful. Error code otherwise.
+ *
+ *  @note This function must be executed in sl_btmesh_on_event for the
+ *  sl_btmesh_evt_vendor_model_receive_id event.
+ ******************************************************************************/
 sl_status_t sl_btmesh_data_log_on_client_receive_event(
         sl_btmesh_msg_t *evt)
 {
@@ -207,6 +246,14 @@ sl_status_t sl_btmesh_data_log_on_client_receive_event(
   return st;
 }
 
+/***************************************************************************//**
+ * Send request to update Log period to server.
+ *
+ * @param[in] period Pointer to period data type instance.
+ *
+ * @return SL_STATUS_OK if successful. Error code otherwise.
+ *
+ ******************************************************************************/
 sl_status_t sl_btmesh_data_log_client_set_period(
                 sl_btmesh_data_log_period_t *period)
 {
@@ -242,6 +289,14 @@ sl_status_t sl_btmesh_data_log_client_set_period(
   return st;
 }
 
+/***************************************************************************//**
+ * Send request to update sample rate to server.
+ *
+ * @param[in] rate Pointer to sample rate data type instance.
+ *
+ * @return SL_STATUS_OK if successful. Error code otherwise.
+ *
+ ******************************************************************************/
 sl_status_t sl_btmesh_data_log_client_set_sample_rate(
                 sl_btmesh_data_log_sample_rate_t *rate)
 {
@@ -277,28 +332,36 @@ sl_status_t sl_btmesh_data_log_client_set_sample_rate(
   return st;
 }
 
-sl_status_t sl_btmesh_data_log_client_set_raw(
-                sl_btmesh_data_log_raw_t *raw)
+/***************************************************************************//**
+ * Send request to update sample threshold to server.
+ *
+ * @param[in] threshold Pointer to threshold data type instance.
+ *
+ * @return SL_STATUS_OK if successful. Error code otherwise.
+ *
+ ******************************************************************************/
+sl_status_t sl_btmesh_data_log_client_set_threshold(
+                sl_btmesh_data_log_threshold_t *threshold)
 {
-  if (SL_BTMESH_DATA_LOG_PROP_LEN < sizeof(sl_btmesh_data_log_raw_t)){
+  if (SL_BTMESH_DATA_LOG_PROP_LEN < sizeof(sl_btmesh_data_log_threshold_t)){
       return SL_STATUS_INVALID_RANGE;
   }
 
   uint8_t tmp_buff[SL_BTMESH_DATA_LOG_PROP_LEN];
   uint8_t *ptr;
 
-  ptr = (uint8_t *)raw;
+  ptr = (uint8_t *)threshold;
   memcpy((uint8_t *)tmp_buff,
          (uint8_t *)ptr,
-         sizeof(sl_btmesh_data_log_raw_t));
+         sizeof(sl_btmesh_data_log_threshold_t));
 
   sl_status_t st = sl_btmesh_vendor_model_set_publication(
                           SL_BTMESH_DATA_LOG_ELEMENT_CFG_VAL,
                           SL_BTMESH_VENDOR_ID,
                           SL_BTMESH_DATA_LOG_MODEL_CLIENT_ID,
-                          SL_BTMESH_DATA_LOG_MESSAGE_RAW_ID,
+                          SL_BTMESH_DATA_LOG_MESSAGE_THRESHOLD_ID,
                           SL_BTMESH_SEGMENT_FINAL,
-                          sizeof(sl_btmesh_data_log_raw_t),
+                          sizeof(sl_btmesh_data_log_threshold_t),
                           (const uint8_t *)tmp_buff);
 
   // Send period
@@ -312,6 +375,10 @@ sl_status_t sl_btmesh_data_log_client_set_raw(
   return st;
 }
 
+/***************************************************************************//**
+ * Timeout timer callback function.
+ *
+ ******************************************************************************/
 static void sli_btmesh_data_log_recv_timeout_callback(
             sl_sleeptimer_timer_handle_t *handle,
             void *data)
@@ -327,6 +394,12 @@ static void sli_btmesh_data_log_recv_timeout_callback(
   }
 }
 
+/***************************************************************************//**
+ * Reset the Log.
+ *
+ * @return SL_STATUS_OK if successful. Error code otherwise.
+ *
+ ******************************************************************************/
 sl_status_t sl_btmesh_data_log_client_reset_log(void)
 {
   if(SL_BTMESH_DATA_LOG_BUSY != sli_recv_status){
@@ -339,11 +412,24 @@ sl_status_t sl_btmesh_data_log_client_reset_log(void)
   return SL_STATUS_BUSY;
 }
 
+/***************************************************************************//**
+ * Receive complete callback function.
+ *
+ ******************************************************************************/
 SL_WEAK void sl_btmesh_data_log_client_recv_complete_callback(void)
 {
 
 }
 
+/***************************************************************************//**
+ * Get the current status of the Log.
+ *
+ * @return Return the current status of the Log.
+ *  - SL_BTMESH_DATA_LOG_IDLE if Log is idle.
+ *  - SL_BTMESH_DATA_LOG_BUSY if Log is receiving.
+ *  - SL_BTMESH_DATA_LOG_COMPLETE if Log is received.
+ *
+ ******************************************************************************/
 uint8_t sl_btmesh_data_log_get_client_state(void)
 {
   return sli_recv_status;

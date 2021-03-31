@@ -26,13 +26,7 @@
 *    misrepresented as being the original software.
 * 3. This notice may not be removed or altered from any source distribution.
 *
-*******************************************************************************
-* # Experimental Quality
-* This code has not been formally tested and is provided as-is. It is not
-* suitable for production environments. In addition, this code will not be
-* maintained and there may be no bug maintenance planned for these resources.
-* Silicon Labs may update projects from time to time.
-******************************************************************************/
+*******************************************************************************/
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -45,7 +39,7 @@ const uint8_t sl_btmesh_data_log_opcodes[SL_BTMESH_DATA_LOG_OPCODE_LENGTH] = {
     SL_BTMESH_DATA_LOG_MESSAGE_STATUS_RSP_ID,
     SL_BTMESH_DATA_LOG_MESSAGE_PERIOD_ID,
     SL_BTMESH_DATA_LOG_MESSAGE_SAMPLE_RATE_ID,
-    SL_BTMESH_DATA_LOG_MESSAGE_RAW_ID
+    SL_BTMESH_DATA_LOG_MESSAGE_THRESHOLD_ID
 };
 
 #ifdef __cplusplus

@@ -26,13 +26,7 @@
 *    misrepresented as being the original software.
 * 3. This notice may not be removed or altered from any source distribution.
 *
-*******************************************************************************
-* # Experimental Quality
-* This code has not been formally tested and is provided as-is. It is not
-* suitable for production environments. In addition, this code will not be
-* maintained and there may be no bug maintenance planned for these resources.
-* Silicon Labs may update projects from time to time.
-******************************************************************************/
+*******************************************************************************/
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -50,16 +44,18 @@ extern "C" {
 #define SL_BTMESH_DATA_LOG_BUFF_ROLL_EN
 
 /// Timeout value in MS
-#define SL_BTMESH_DATA_LOG_TIMEOUT_MS_CFG_VAL   (3000)
+#define SL_BTMESH_DATA_LOG_TIMEOUT_MS_CFG_VAL       (3000)
 /// Time delay value for send response in MS
-#define SL_BTMESH_DATA_LOG_RESP_MS_CFG_VAL      (1)
+#define SL_BTMESH_DATA_LOG_RESP_MS_CFG_VAL          (10)
+/// Send delay timer value in MS
+#define SL_BTMESH_DATA_LOG_SEND_DELAY_MS_CFG_VAL    (10)
 
 /// Sample rate in MS
 #define SL_BTMESH_DATA_LOG_SAMPLE_RATE_MS_CFG_VAL   (1000)
 /// Log period in MS
-#define SL_BTMESH_DATA_LOG_PERIOD_MS_CFG_VAL        (5000)
+#define SL_BTMESH_DATA_LOG_PERIOD_MS_CFG_VAL        (10000)
 /// Threshold value
-#define SL_BTMESH_DATA_LOG_RAW_CFG_VAL              (1)
+#define SL_BTMESH_DATA_LOG_THESHOLD_CFG_VAL         (1)
 
 /// The logging data type
 typedef uint8_t sl_data_log_data_t;

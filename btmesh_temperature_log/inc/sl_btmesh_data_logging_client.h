@@ -42,23 +42,97 @@ extern "C" {
 
 #include "sl_btmesh_data_logging_capi.h"
 
-/// The "Last" flag in receive array
-#define SL_BTMESH_BYTE_FLAG_POS     0
-#define SL_BTMESH_BYTE_FLAG_LEN     1
-
+/***************************************************************************//**
+ * Initialize the data log client.
+ *
+ * @param[in] data_log_ptr Pointer to Log data instance.
+ *
+ * @return SL_STATUS_OK if successful. Error code otherwise.
+ *
+ ******************************************************************************/
 sl_status_t sl_btmesh_data_log_client_init(sl_data_log_t *data_log_ptr);
-void sl_btmesh_data_log_client_recv_complete_callback(void);
+
+/***************************************************************************//**
+ * De-Initialize the data log client.
+ *
+ * @return SL_STATUS_OK if successful. Error code otherwise.
+ *
+ ******************************************************************************/
 sl_status_t sl_btmesh_data_log_client_deinit(void);
-sl_status_t sl_btmesh_data_log_on_client_receive_event(
-        sl_btmesh_msg_t *evt);
-uint8_t sl_btmesh_data_log_get_client_state(void);
+
+/***************************************************************************//**
+ * Handle event of the Log client.
+ *
+ * @param[in] evt Pointer to btmesh message.
+ *
+ * Handle event of the Vendor model. If there's valid opcode received then
+ * receiving handler will be called.
+ *
+ * @return SL_STATUS_OK if successful. Error code otherwise.
+ *
+ *  @note This function must be executed in sl_btmesh_on_event for the
+ *  sl_btmesh_evt_vendor_model_receive_id event.
+ ******************************************************************************/
+sl_status_t sl_btmesh_data_log_on_client_receive_event( sl_btmesh_msg_t *evt);
+
+/***************************************************************************//**
+ * Send request to update Log period to server.
+ *
+ * @param[in] period Pointer to period data type instance.
+ *
+ * @return SL_STATUS_OK if successful. Error code otherwise.
+ *
+ ******************************************************************************/
 sl_status_t sl_btmesh_data_log_client_set_period(
                 sl_btmesh_data_log_period_t *period);
+
+/***************************************************************************//**
+ * Send request to update sample rate to server.
+ *
+ * @param[in] rate Pointer to sample rate data type instance.
+ *
+ * @return SL_STATUS_OK if successful. Error code otherwise.
+ *
+ ******************************************************************************/
 sl_status_t sl_btmesh_data_log_client_set_sample_rate(
                 sl_btmesh_data_log_sample_rate_t *rate);
-sl_status_t sl_btmesh_data_log_client_set_raw(
-                sl_btmesh_data_log_raw_t *raw);
+
+/***************************************************************************//**
+ * Send request to update sample threshold to server.
+ *
+ * @param[in] threshold Pointer to threshold data type instance.
+ *
+ * @return SL_STATUS_OK if successful. Error code otherwise.
+ *
+ ******************************************************************************/
+sl_status_t sl_btmesh_data_log_client_set_threshold(
+                sl_btmesh_data_log_threshold_t *threshold);
+
+/***************************************************************************//**
+ * Receive complete callback function.
+ *
+ ******************************************************************************/
+void sl_btmesh_data_log_client_recv_complete_callback(void);
+
+/***************************************************************************//**
+ * Reset the Log.
+ *
+ * @return SL_STATUS_OK if successful. Error code otherwise.
+ *
+ ******************************************************************************/
 sl_status_t sl_btmesh_data_log_client_reset_log(void);
+
+/***************************************************************************//**
+ * Get the current status of the Log.
+ *
+ * @return Return the current status of the Log.
+ *  - SL_BTMESH_DATA_LOG_IDLE if Log is idle.
+ *  - SL_BTMESH_DATA_LOG_BUSY if Log is receiving.
+ *  - SL_BTMESH_DATA_LOG_COMPLETE if Log is received.
+ *
+ ******************************************************************************/
+uint8_t sl_btmesh_data_log_get_client_state(void);
+
 #endif // SL_BTMESH_DATA_LOGGING_CLIENT_H
 
 #ifdef __cplusplus

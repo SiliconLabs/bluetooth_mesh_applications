@@ -26,13 +26,7 @@
 *    misrepresented as being the original software.
 * 3. This notice may not be removed or altered from any source distribution.
 *
-*******************************************************************************
-* # Experimental Quality
-* This code has not been formally tested and is provided as-is. It is not
-* suitable for production environments. In addition, this code will not be
-* maintained and there may be no bug maintenance planned for these resources.
-* Silicon Labs may update projects from time to time.
-******************************************************************************/
+*******************************************************************************/
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -64,14 +58,17 @@ extern "C" {
 /// Data Log sample timing
 #define SL_BTMESH_DATA_LOG_MESSAGE_SAMPLE_RATE_ID     0x04
 /// Raw data used for specific purpose
-#define SL_BTMESH_DATA_LOG_MESSAGE_RAW_ID             0x05
+#define SL_BTMESH_DATA_LOG_MESSAGE_THRESHOLD_ID       0x05
 
 /// Client response cmd length
-#define SL_BTMESH_DATA_LOG_MESSAGE_STATUS_RSP_LEN     1
+#define SL_BTMESH_DATA_LOG_MESSAGE_STATUS_RSP_LEN     0
 #define SL_BTMESH_DATA_LOG_MESSAGE_STATUS_RSP_DATA    NULL
 
 /// Maximum data length of a vendor model massage (byte)
 #define SL_BTMESH_STACK_SEND_LENGTH_MAX           (247)
+#if (SL_BTMESH_DATA_LOG_BUFF_SIZE_CFG_VAL > SL_BTMESH_STACK_SEND_LENGTH_MAX)
+#error "Buffer size should be lower than 246 bytes"
+#endif
 /// Handshake information data length (byte)
 #define  SL_BTMESH_DATA_LOG_INFO_LENGTH           1
 /// Maximum length in one data sending
@@ -116,6 +113,10 @@ extern "C" {
 /// Reset value
 #define SL_BTMESH_DATA_LOG_RESET_VAL      (0)
 
+/// The "Last" flag in receive array
+#define SL_BTMESH_BYTE_FLAG_POS     0
+#define SL_BTMESH_BYTE_FLAG_LEN     1
+
 /// Type of the Data Logging element index
 typedef uint16_t sl_data_log_index_t;
 
@@ -138,13 +139,13 @@ typedef uint32_t sl_btmesh_data_log_sample_rate_t;
 typedef uint32_t sl_btmesh_data_log_period_t;
 
 /// Data type for the raw data
-typedef int8_t sl_btmesh_data_log_raw_t;
+typedef int8_t sl_btmesh_data_log_threshold_t;
 
 /// Data structure for the Data Log properties
 struct sl_btmesh_data_log_properties_s {
     sl_btmesh_data_log_sample_rate_t sample_rate;
     sl_btmesh_data_log_period_t period;
-    sl_btmesh_data_log_raw_t raw_data;
+    sl_btmesh_data_log_threshold_t threshold;
 };
 
 typedef struct sl_btmesh_data_log_properties_s sl_btmesh_data_log_properties_t;
