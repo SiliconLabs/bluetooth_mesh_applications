@@ -1,0 +1,35 @@
+#CRC Codes for initially generated config files -- do not modify!
+#Wed Mar 31 18:14:54 ICT 2021
+sl_bluetooth_config.h=1790123900
+sl_btmesh_config.h=944260131
+sl_hfxo_manager_config.h=415033866
+sl_device_init_lfxo_config.h=-1419356131
+sl_device_init_hfrco_config.h=-274886707
+sl_sleeptimer_config.h=-1879962229
+btconf/gatt_service_mesh_prov.xml=1941999107
+buffer_pool_allocator_config.h=-542306717
+btconf/ota_dfu.xml=-640830817
+btconf/gatt_configuration.btconf=269523226
+sl_simple_button_btn0_config.h=441624817
+sl_device_init_hfxo_config.h=-185252975
+btmeshconf/dcd_config.btmeshconf=1318200344
+sl_app_log_config.h=1952004306
+sl_power_manager_config.h=250630329
+sl_rail_util_rf_path_config.h=987448540
+btmeshconf/btmesh_sensor_client.dcd=752152473
+sl_iostream_usart_vcom_config.h=298420592
+btconf/gatt_service_mesh_default.xml=1391058828
+nvm3_default_config.h=44458093
+mbedtls_config.h=-1670505928
+sl_btmesh_sensor_client_config.h=781356037
+sl_device_init_emu_config.h=622680131
+sl_rail_util_pa_config.h=803232669
+btconf/gatt_service_mesh_proxy.xml=-649136298
+sl_rail_util_pti_config.h=-2086789405
+sl_btmesh_button_press_config.h=-1527527249
+sl_app_assert_config.h=1721802231
+sl_board_control_config.h=-1151408372
+sl_memory_config.h=1832070634
+sl_simple_button_config.h=420306
+sl_simple_button_btn1_config.h=-2090606084
+sl_btmesh_event_log_config.h=1567801977
