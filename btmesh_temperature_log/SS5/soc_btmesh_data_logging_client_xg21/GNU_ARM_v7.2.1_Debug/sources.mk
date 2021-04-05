@@ -20,6 +20,7 @@ SUBDIRS := \
 autogen \
 gecko_sdk_3.1.1/app/bluetooth/common/btmesh_button_press \
 gecko_sdk_3.1.1/app/bluetooth/common/btmesh_factory_reset \
+gecko_sdk_3.1.1/app/bluetooth/common/btmesh_provisioning_decorator \
 gecko_sdk_3.1.1/app/bluetooth/common/ota_dfu \
 gecko_sdk_3.1.1/app/bluetooth/common/simple_timer \
 gecko_sdk_3.1.1/hardware/board/src \
@@ -29,6 +30,7 @@ gecko_sdk_3.1.1/platform/bootloader/api \
 gecko_sdk_3.1.1/platform/common/src \
 gecko_sdk_3.1.1/platform/common/toolchain/src \
 gecko_sdk_3.1.1/platform/driver/button/src \
+gecko_sdk_3.1.1/platform/driver/leddrv/src \
 gecko_sdk_3.1.1/platform/emdrv/gpiointerrupt/src \
 gecko_sdk_3.1.1/platform/emdrv/nvm3/src \
 gecko_sdk_3.1.1/platform/emlib/src \
@@ -54,5 +56,4 @@ gecko_sdk_3.1.1/util/third_party/crypto/sl_component/sl_protocol_crypto/src \
 gecko_sdk_3.1.1/util/third_party/crypto/sl_component/sl_psa_driver/src \
 gecko_sdk_3.1.1/util/third_party/printf \
 gecko_sdk_3.1.1/util/third_party/printf/src \
-src \
 

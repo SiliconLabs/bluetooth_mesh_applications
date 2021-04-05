@@ -26,6 +26,8 @@ component:
   id: simple_button
 - {id: btmesh_feature_node}
 - {id: mpu}
+- instance: [led0, led1]
+  id: simple_led
 - {id: brd4180b}
 - {id: btmesh_feature_gatt_prov_bearer}
 - {id: rail_util_pti}
@@ -37,8 +39,9 @@ component:
 - {id: brd4001a}
 - instance: [vcom]
   id: iostream_usart
-- {id: slwmb4001a}
 - {id: btmesh_button_press}
+- {id: slwmb4001a}
+- {id: btmesh_provisioning_decorator}
 - {id: btmesh_stack}
 - {id: ota_dfu}
 - {id: bootloader_interface}

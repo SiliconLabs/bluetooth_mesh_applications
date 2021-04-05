@@ -22,6 +22,7 @@
 #include "nvm3_default.h"
 #include "sl_ram_interrupt_vector_init.h"
 #include "sl_simple_button_instances.h"
+#include "sl_simple_led_instances.h"
 #include "sl_simple_timer.h"
 #include "sl_btmesh.h"
 #include "sl_power_manager.h"
@@ -51,6 +52,7 @@ void sl_platform_init(void)
 void sl_driver_init(void)
 {
   sl_simple_button_init_instances();
+  sl_simple_led_init_instances();
 }
 
 void sl_service_init(void)

@@ -1,5 +1,5 @@
 #CRC Codes for initially generated config files -- do not modify!
-#Wed Mar 31 18:14:54 ICT 2021
+#Mon Apr 05 10:43:04 ICT 2021
 sl_bluetooth_config.h=1790123900
 sl_btmesh_config.h=944260131
 sl_hfxo_manager_config.h=415033866
@@ -8,6 +8,7 @@ sl_device_init_hfrco_config.h=-274886707
 sl_sleeptimer_config.h=-1879962229
 btconf/gatt_service_mesh_prov.xml=1941999107
 buffer_pool_allocator_config.h=-542306717
+sl_simple_led_led0_config.h=-1081642295
 btconf/ota_dfu.xml=-640830817
 btconf/gatt_configuration.btconf=269523226
 sl_simple_button_btn0_config.h=441624817
@@ -19,9 +20,11 @@ sl_rail_util_rf_path_config.h=987448540
 btmeshconf/btmesh_sensor_client.dcd=752152473
 sl_iostream_usart_vcom_config.h=298420592
 btconf/gatt_service_mesh_default.xml=1391058828
+sl_simple_led_led1_config.h=105007875
 nvm3_default_config.h=44458093
 mbedtls_config.h=-1670505928
 sl_btmesh_sensor_client_config.h=781356037
+sl_btmesh_provisioning_decorator_config.h=-900179834
 sl_device_init_emu_config.h=622680131
 sl_rail_util_pa_config.h=803232669
 btconf/gatt_service_mesh_proxy.xml=-649136298

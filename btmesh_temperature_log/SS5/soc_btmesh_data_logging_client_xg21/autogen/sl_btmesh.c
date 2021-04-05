@@ -2,6 +2,7 @@
 
 #include <em_common.h>
 #include "sl_btmesh.h"
+#include "sl_btmesh_provisioning_decorator.h"
 
 /** @brief Table of used BGAPI classes */
 static const struct sli_bgapi_class * const btmesh_class_table[] =
@@ -26,6 +27,7 @@ SL_WEAK void sl_btmesh_on_event(sl_btmesh_msg_t* evt)
 
 void sl_btmesh_process_event(sl_btmesh_msg_t *evt)
 {
+  sl_btmesh_handle_provisioning_decorator_event(evt);
   sl_btmesh_on_event(evt);
 }
 

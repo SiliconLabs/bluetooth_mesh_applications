@@ -26,6 +26,8 @@ component:
   id: simple_button
 - {id: btmesh_feature_node}
 - {id: mpu}
+- instance: [led0, led1]
+  id: simple_led
 - {id: brd4180b}
 - {id: btmesh_feature_gatt_prov_bearer}
 - {id: rail_util_pti}
@@ -37,6 +39,7 @@ component:
 - instance: [vcom]
   id: iostream_usart
 - {id: btmesh_button_press}
+- {id: btmesh_provisioning_decorator}
 - {id: btmesh_stack}
 - {id: silabs_core_memory_manager}
 - {id: button}
