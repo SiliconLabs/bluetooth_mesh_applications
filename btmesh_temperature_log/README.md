@@ -26,8 +26,8 @@ At least one node for Log Server, one node for Log client and a provisioner.
 
 - Use a provisioner to provision for Client and Server.
 - On provisioner, create two groups: Server_Group (address: 0xC000) and Client_Group (address: 0xC001).
-		Set public address for the Server to Server_Group and subcribe address to Client_Group.
-		Set public address for the Client to Client_Group and subcribe address to Server_Group.
+		Set publication address for the Server to Server_Group and subscription address to Client_Group.
+		Set publication address for the Client to Client_Group and subscription address to Server_Group.
 	
 ## How It Works ##
 
