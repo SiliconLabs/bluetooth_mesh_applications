@@ -71,7 +71,6 @@ LIB_OF_SS5_PATH :=
 
 INCLUDE_PATH := \
 -I"${USER_SOURCE_DIR}/inc" \
--I"${USER_SOURCE_DIR}/inc" \
 -I"${USER_SS_WORKSPACE}/${USER_SS_PROJECT_NAME}/config" \
 -I"${USER_SS_WORKSPACE}/${USER_SS_PROJECT_NAME}" \
 -I"${USER_SS_SDK_PATH}//platform/common/toolchain/inc" \

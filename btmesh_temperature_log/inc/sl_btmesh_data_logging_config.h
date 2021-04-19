@@ -34,31 +34,36 @@ extern "C" {
 #ifndef SL_BTMESH_DATA_LOGGING_CONFIG_H
 #define SL_BTMESH_DATA_LOGGING_CONFIG_H
 
+#include "sl_btmesh_device_properties.h"
+
 /// The Data Log buffer size
-#define SL_BTMESH_DATA_LOG_BUFF_SIZE_CFG_VAL  100
+#define SL_BTMESH_DATA_LOG_BUFF_SIZE_CFG_VAL  ((size_t)100)
 
 /// Default Main element
-#define SL_BTMESH_DATA_LOG_ELEMENT_CFG_VAL    0
+#define SL_BTMESH_DATA_LOG_ELEMENT_CFG_VAL    ((uint16_t)0)
 
 /// Enable buffer roll over
-#define SL_BTMESH_DATA_LOG_BUFF_ROLL_EN
+//#define SL_BTMESH_DATA_LOG_BUFF_ROLL_EN
 
 /// Timeout value in MS
-#define SL_BTMESH_DATA_LOG_TIMEOUT_MS_CFG_VAL       (3000)
+#define SL_BTMESH_DATA_LOG_TIMEOUT_MS_CFG_VAL       ((uint16_t)3000)
 /// Time delay value for send response in MS
-#define SL_BTMESH_DATA_LOG_RESP_MS_CFG_VAL          (10)
+#define SL_BTMESH_DATA_LOG_RESP_MS_CFG_VAL          ((uint16_t)10)
 /// Send delay timer value in MS
-#define SL_BTMESH_DATA_LOG_SEND_DELAY_MS_CFG_VAL    (10)
+#define SL_BTMESH_DATA_LOG_SEND_DELAY_MS_CFG_VAL    ((uint16_t)10)
 
 /// Sample rate in MS
-#define SL_BTMESH_DATA_LOG_SAMPLE_RATE_MS_CFG_VAL   (1000)
+#define SL_BTMESH_DATA_LOG_SAMPLE_RATE_MS_CFG_VAL   ((uint16_t)1000)
 /// Log period in MS
-#define SL_BTMESH_DATA_LOG_PERIOD_MS_CFG_VAL        (10000)
+#define SL_BTMESH_DATA_LOG_PERIOD_MS_CFG_VAL        ((uint16_t)10000)
 /// Threshold value
-#define SL_BTMESH_DATA_LOG_THESHOLD_CFG_VAL         (1)
+#define SL_BTMESH_DATA_LOG_THESHOLD_CFG_VAL  ((sl_btmesh_data_log_threshold_t)0)
 
 /// The logging data type
-typedef uint8_t sl_data_log_data_t;
+typedef struct {
+  temperature_8_t temp;
+  percentage_8_t  humid;
+}sl_data_log_data_t;
 
 #endif // SL_BTMESH_DATA_LOGGING_CONFIG_H
 

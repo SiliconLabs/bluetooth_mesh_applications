@@ -38,72 +38,62 @@ extern "C" {
 #include "sl_btmesh_data_logging_config.h"
 
 /// Silabs company ID
-#define SL_BTMESH_VENDOR_ID                         0x02FF
+#define SL_BTMESH_VENDOR_ID                     ((uint16_t)0x02FF)
 
 /// Vendor model server ID
-#define SL_BTMESH_DATA_LOG_MODEL_SERVER_ID      0x0000
+#define SL_BTMESH_DATA_LOG_MODEL_SERVER_ID      ((uint16_t)0x0000)
 
 /// Vendor model client ID
-#define SL_BTMESH_DATA_LOG_MODEL_CLIENT_ID      0x0001
+#define SL_BTMESH_DATA_LOG_MODEL_CLIENT_ID      ((uint16_t)0x0001)
 
 /// Opcode data length
-#define SL_BTMESH_DATA_LOG_OPCODE_LENGTH        5
+#define SL_BTMESH_DATA_LOG_OPCODE_LENGTH        7
 
 /// Data Log Status messages ID
-#define SL_BTMESH_DATA_LOG_MESSAGE_STATUS_ID          0x01
+#define SL_BTMESH_DATA_LOG_MESSAGE_STATUS_ID          ((uint8_t)0x01)
 /// Data Log Status respond messages ID
-#define SL_BTMESH_DATA_LOG_MESSAGE_STATUS_RSP_ID      0x02
+#define SL_BTMESH_DATA_LOG_MESSAGE_STATUS_RSP_ID      ((uint8_t)0x02)
 /// Data Log sending timing
-#define SL_BTMESH_DATA_LOG_MESSAGE_PERIOD_ID          0x03
+#define SL_BTMESH_DATA_LOG_MESSAGE_PERIOD_ID          ((uint8_t)0x03)
 /// Data Log sample timing
-#define SL_BTMESH_DATA_LOG_MESSAGE_SAMPLE_RATE_ID     0x04
+#define SL_BTMESH_DATA_LOG_MESSAGE_SAMPLE_RATE_ID     ((uint8_t)0x04)
 /// Raw data used for specific purpose
-#define SL_BTMESH_DATA_LOG_MESSAGE_THRESHOLD_ID       0x05
+#define SL_BTMESH_DATA_LOG_MESSAGE_THRESHOLD_ID       ((uint8_t)0x05)
+/// Temperature data
+#define SL_BTMESH_DATA_LOG_MESSAGE_TEMP_ID            ((uint8_t)0x06)
+/// Temperature data request
+#define SL_BTMESH_DATA_LOG_MESSAGE_TEMP_REQ_ID        ((uint8_t)0x07)
 
 /// Client response cmd length
-#define SL_BTMESH_DATA_LOG_MESSAGE_STATUS_RSP_LEN     0
+#define SL_BTMESH_DATA_LOG_MESSAGE_STATUS_RSP_LEN     ((uint8_t)0)
 #define SL_BTMESH_DATA_LOG_MESSAGE_STATUS_RSP_DATA    NULL
 
 /// Maximum data length of a vendor model massage (byte)
-#define SL_BTMESH_STACK_SEND_LENGTH_MAX           (247)
-#if (SL_BTMESH_DATA_LOG_BUFF_SIZE_CFG_VAL > SL_BTMESH_STACK_SEND_LENGTH_MAX)
-#error "Buffer size should be lower than 246 bytes"
-#endif
-/// Handshake information data length (byte)
-#define  SL_BTMESH_DATA_LOG_INFO_LENGTH           1
-/// Maximum length in one data sending
-/// The max length is decreased because of the additional handshake information
-#define SL_BTMESH_DATA_LOG_LENGTH_MAX (SL_BTMESH_STACK_SEND_LENGTH_MAX \
-                                       - SL_BTMESH_DATA_LOG_INFO_LENGTH)
-
-/// Number of data index sent in one publication
-#define SL_BTMESH_DATA_LOG_SEG_NUM(x) \
-      (((x)*sizeof(sl_data_log_data_t))/SL_BTMESH_DATA_LOG_LENGTH_MAX) \
-      + (((x)*sizeof(sl_data_log_data_t))%SL_BTMESH_DATA_LOG_LENGTH_MAX? 1 : 0)
+#define SL_BTMESH_STACK_SEND_LENGTH_MAX           ((uint16_t)247)
 
 /// Determine last package of the data log will be sent
-#define SL_BTMESH_DATA_LOG_LAST           1
-#define SL_BTMESH_DATA_LOG_NOT_LAST       0
+#define SL_BTMESH_DATA_LOG_LAST           ((uint8_t)1)
+#define SL_BTMESH_DATA_LOG_NOT_LAST       ((uint8_t)0)
 
 /// Data logging status
-#define SL_BTMESH_DATA_LOG_IDLE           0
-#define SL_BTMESH_DATA_LOG_BUSY           1
-#define SL_BTMESH_DATA_LOG_COMPLETE       2
+#define SL_BTMESH_DATA_LOG_IDLE           ((uint8_t)0)
+#define SL_BTMESH_DATA_LOG_BUSY           ((uint8_t)1)
+#define SL_BTMESH_DATA_LOG_COMPLETE       ((uint8_t)2)
 
 /// High Priority
-#define HIGH_PRIORITY                  0
+#define HIGH_PRIORITY                  ((uint8_t)0)
 /// No Timer Options
-#define NO_FLAGS                       0
+#define NO_FLAGS                       ((uint16_t)0)
 /// Callback has not parameters
 #define NO_CALLBACK_DATA               (void *)NULL
 
 /// There're remaining segments
-#define SL_BTMESH_SEGMENT_CONTI           0
+#define SL_BTMESH_SEGMENT_CONTI           ((uint8_t)0)
 /// The final segment
-#define SL_BTMESH_SEGMENT_FINAL           1
+#define SL_BTMESH_SEGMENT_FINAL           ((uint8_t)1)
 
 /// Publish this model
-#define SL_BTMESH_MODEL_PUBLISH           1
+#define SL_BTMESH_MODEL_PUBLISH           ((uint8_t)1)
 
 #define SL_BTMESH_DATA_LOG_CLEAR_VAL      0
 
@@ -111,7 +101,7 @@ extern "C" {
 #define SL_BTMESH_DATA_LOG_PROP_LEN       4
 
 /// Reset value
-#define SL_BTMESH_DATA_LOG_RESET_VAL      (0)
+#define SL_BTMESH_DATA_LOG_RESET_VAL      ((uint16_t)0)
 
 /// The "Last" flag in receive array
 #define SL_BTMESH_BYTE_FLAG_POS     0
@@ -126,11 +116,27 @@ typedef struct sl_data_log {
   sl_data_log_data_t *data;
 }sl_data_log_t;
 
-/// Data structure for the data sending by stack
-typedef struct sl_data_frame {
-  uint8_t last;
+/// Data structure for the data Logging receiving
+typedef struct sl_data_log_recv {
+  uint16_t source_addr;
+  uint16_t dest_addr;
+  sl_data_log_index_t index;
   sl_data_log_data_t *data;
-}sl_data_frame_t;
+}sl_data_log_recv_t;
+
+/// Data structure header of the data sending by stack
+typedef struct sl_data_frame_header {
+  uint8_t last;
+  uint8_t count;
+}sl_data_frame_header_t;
+
+/// Data structure of the data sending by stack
+PACKSTRUCT(struct sl_data_frame {
+  sl_data_frame_header_t header;
+  sl_data_log_data_t *data;
+});
+
+typedef struct sl_data_frame sl_data_frame_t;
 
 /// Data type for the Log sample rate
 typedef uint32_t sl_btmesh_data_log_sample_rate_t;
@@ -147,8 +153,22 @@ struct sl_btmesh_data_log_properties_s {
     sl_btmesh_data_log_period_t period;
     sl_btmesh_data_log_threshold_t threshold;
 };
-
 typedef struct sl_btmesh_data_log_properties_s sl_btmesh_data_log_properties_t;
+
+/// Handshake information data length (byte)
+#define  SL_BTMESH_DATA_LOG_INFO_LENGTH       sizeof(sl_data_frame_header_t)
+/// Maximum length in one data sending
+/// The max length is decreased because of the additional handshake information
+#define SL_BTMESH_DATA_LOG_LENGTH_MAX (SL_BTMESH_STACK_SEND_LENGTH_MAX \
+                                       - SL_BTMESH_DATA_LOG_INFO_LENGTH)
+
+/// Number of data index sent in one publication
+#define SL_BTMESH_DATA_LOG_SEG_NUM(x) \
+      (((x)*sizeof(sl_data_log_data_t))/SL_BTMESH_DATA_LOG_LENGTH_MAX) \
+      + (((x)*sizeof(sl_data_log_data_t))%SL_BTMESH_DATA_LOG_LENGTH_MAX? 1 : 0)
+
+/// Frame header length
+#define SL_BTMESH_DATA_HEADER_LEN     sizeof(sl_data_frame_header_t)
 
 /// Message Opcodes
 extern const uint8_t sl_btmesh_data_log_opcodes[];

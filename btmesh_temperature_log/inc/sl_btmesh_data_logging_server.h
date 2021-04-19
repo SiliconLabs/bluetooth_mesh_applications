@@ -26,13 +26,7 @@
 *    misrepresented as being the original software.
 * 3. This notice may not be removed or altered from any source distribution.
 *
-*******************************************************************************
-* # Experimental Quality
-* This code has not been formally tested and is provided as-is. It is not
-* suitable for production environments. In addition, this code will not be
-* maintained and there may be no bug maintenance planned for these resources.
-* Silicon Labs may update projects from time to time.
-******************************************************************************/
+*******************************************************************************/
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -138,6 +132,40 @@ sl_status_t sl_btmesh_data_log_server_start(void);
 sl_btmesh_data_log_threshold_t sl_btmesh_data_log_get_threshold(void);
 
 /***************************************************************************//**
+ * Check the log sending is started.
+ *
+ * @return returns the log sending status.
+ *         - true if log is requested to send
+ *         - false if log is idle
+ *
+ ******************************************************************************/
+bool sl_btmesh_data_log_is_started_sending(void);
+
+/***************************************************************************//**
+ * Process log sending.
+ *
+ * @return SL_STATUS_OK if successful. Error code otherwise.
+ *
+ ******************************************************************************/
+sl_status_t sl_btmesh_data_log_step(void);
+
+/***************************************************************************//**
+ * Publish the current data.
+ *
+ * @param[in] data pointer to data to be sent.
+ *
+ * @return SL_STATUS_OK if successful. Error code otherwise.
+ *
+ ******************************************************************************/
+sl_status_t sl_btmesh_data_log_server_send_data(sl_data_log_data_t *data);
+
+/***************************************************************************//**
+ * Delete NVM storage.
+ *
+ ******************************************************************************/
+void sl_btmesh_data_log_reset_config(void);
+
+/***************************************************************************//**
  * Weak implementation of Callbacks.
  *
  ******************************************************************************/
@@ -148,6 +176,8 @@ void sl_btmesh_data_log_full_callback(void);
 void sl_btmesh_data_log_complete_callback(void);
 
 void sl_btmesh_data_log_on_sample_callback(void);
+
+void sl_btmesh_data_log_on_periodic_callback(void);
 
 #endif // SL_BTMESH_DATA_LOGGING_SERVER_H
 

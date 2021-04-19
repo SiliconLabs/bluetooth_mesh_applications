@@ -56,4 +56,5 @@ gecko_sdk_3.1.1/util/third_party/crypto/sl_component/sl_protocol_crypto/src \
 gecko_sdk_3.1.1/util/third_party/crypto/sl_component/sl_psa_driver/src \
 gecko_sdk_3.1.1/util/third_party/printf \
 gecko_sdk_3.1.1/util/third_party/printf/src \
+temperature \
 

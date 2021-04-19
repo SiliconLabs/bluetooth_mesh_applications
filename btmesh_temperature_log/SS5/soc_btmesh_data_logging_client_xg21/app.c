@@ -52,7 +52,9 @@
 /// Buffer for the Log received
 sl_data_log_data_t log_data_arr[SL_BTMESH_DATA_LOG_BUFF_SIZE_CFG_VAL];
 
-sl_data_log_t log_data = {
+sl_data_log_recv_t log_data = {
+    .source_addr = 0,
+    .dest_addr = 0,
     .index = 0,
     .data = log_data_arr
 };
@@ -308,7 +310,7 @@ void print_log(void)
   sl_app_log("Received Len: %d\r\n", log_data.index);
   sl_app_log("Received Log: [ ");
   for(count = 0; count < log_data.index; count++){
-      sl_app_log("0x%X ", log_data.data[count]);
+      sl_app_log("%d ", log_data.data[count]);
   }
   sl_app_log("]\r\n");
 }

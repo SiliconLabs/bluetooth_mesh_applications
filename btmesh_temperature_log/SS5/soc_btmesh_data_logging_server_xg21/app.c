@@ -36,6 +36,8 @@
 
 #include "sl_btmesh_data_logging_server.h"
 
+#include "sl_btmesh_temperature.h"
+
 /// Length of the display name buffer
 #define NAME_BUF_LEN                   20
 /// Timout for Blinking LED during provisioning
@@ -92,6 +94,7 @@ void change_leds_to_buttons(void)
  *****************************************************************************/
 SL_WEAK void app_init(void)
 {
+  sl_status_t sc;
   /////////////////////////////////////////////////////////////////////////////
   // Put your additional application init code here!                         //
   // This is called once during start-up.                                    //
@@ -101,6 +104,11 @@ SL_WEAK void app_init(void)
   change_buttons_to_leds();
   // Change LEDs to buttons in case of shared pin
   change_leds_to_buttons();
+
+  sc = sl_btmesh_temperature_init();
+  sl_app_assert(sc == SL_STATUS_OK,
+                "[E: 0x%04x] Failed to init temperature sensor\r\n",
+                (int)sc);
 }
 
 /**************************************************************************//**
@@ -113,6 +121,9 @@ SL_WEAK void app_process_action(void)
   // This is called infinitely.                                              //
   // Do not call blocking functions from here!                               //
   /////////////////////////////////////////////////////////////////////////////
+#ifndef SL_BTMESH_DATA_LOG_RSP_ENABLE
+  (void)sl_btmesh_data_log_step();
+#endif
 }
 
 /***************************************************************************//**
@@ -226,6 +237,7 @@ void sl_btmesh_on_event(sl_btmesh_msg_t *evt)
     ///////////////////////////////////////////////////////////////////////////
 
     case sl_btmesh_evt_node_reset_id:
+      sl_btmesh_data_log_reset_config();
       sl_btmesh_initiate_factory_reset();
       break;
     // -------------------------------
@@ -250,6 +262,7 @@ void sl_btmesh_button_press_cb(uint8_t button, uint8_t duration)
     sl_app_log("Log started\r\n");
   }
   else if(button == SL_BTMESH_BUTTON_PRESS_BUTTON_1){
+      sl_btmesh_data_log_reset_config();
       sl_btmesh_initiate_factory_reset();
   }
 }
@@ -259,14 +272,20 @@ void sl_btmesh_button_press_cb(uint8_t button, uint8_t duration)
  *******************************************************************************/
 void sl_btmesh_data_log_on_sample_callback(void)
 {
-  static uint8_t counter = 0;
+  sl_status_t sc;
+  sl_data_log_data_t data;
+  temperature_8_t temperature;
+  percentage_8_t rhumid;
+  // Get temperature
+  sc = sl_btmesh_temperature_get_rht(&temperature, &rhumid);
 
-  // Fill simulated data to log
-  sl_status_t sc = sl_btmesh_data_log_append((sl_data_log_data_t *)&counter);
+  // Fill temperature data to log
+  data.temp = temperature;
+  data.humid = rhumid;
+  sc = sl_btmesh_data_log_append((sl_data_log_data_t *)&data);
   sl_app_assert(sc != SL_STATUS_FAIL,
                 "[E: 0x%04x] Failed to append log\n",
                 (int)sc);
-  counter++;
 }
 
 /***************************************************************************//**
@@ -360,4 +379,14 @@ void sl_btmesh_on_node_provisioned(uint16_t address, uint32_t iv_index)
 #endif // SINGLE_LED
   // Change LEDs to buttons in case of shared pin
   change_leds_to_buttons();
+}
+
+/***************************************************************************//**
+ * Log periodic sending callback
+ *******************************************************************************/
+void sl_btmesh_data_log_on_periodic_callback(void)
+{
+  // Report log of temperature
+  sl_app_log("Periodically send Log status\n");
+  (void)sl_btmesh_data_log_server_send_status();
 }

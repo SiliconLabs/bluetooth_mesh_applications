@@ -42,6 +42,8 @@ extern "C" {
 
 #include "sl_btmesh_data_logging_capi.h"
 
+#define SL_BTMESH_RECV_ID_INIT_VAL    0x55
+
 /***************************************************************************//**
  * Initialize the data log client.
  *
@@ -50,7 +52,7 @@ extern "C" {
  * @return SL_STATUS_OK if successful. Error code otherwise.
  *
  ******************************************************************************/
-sl_status_t sl_btmesh_data_log_client_init(sl_data_log_t *data_log_ptr);
+sl_status_t sl_btmesh_data_log_client_init(sl_data_log_recv_t *data_log_ptr);
 
 /***************************************************************************//**
  * De-Initialize the data log client.
@@ -113,6 +115,13 @@ sl_status_t sl_btmesh_data_log_client_set_threshold(
  *
  ******************************************************************************/
 void sl_btmesh_data_log_client_recv_complete_callback(void);
+
+/***************************************************************************//**
+ * Data receive complete callback function.
+ *
+ ******************************************************************************/
+void sl_btmesh_data_log_client_data_recv_callback(
+                               sl_data_log_data_t *data);
 
 /***************************************************************************//**
  * Reset the Log.
