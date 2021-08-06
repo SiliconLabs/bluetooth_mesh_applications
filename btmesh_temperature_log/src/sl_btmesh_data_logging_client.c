@@ -38,7 +38,7 @@ extern "C" {
 #endif
 
 #include "sl_sleeptimer.h"
-#include "sl_app_log.h"
+#include "app_log.h"
 #include "sl_btmesh_data_logging_client.h"
 #include "em_common.h"
 
@@ -277,7 +277,7 @@ sl_status_t sl_btmesh_data_log_on_client_receive_event(
                                      SL_BTMESH_DATA_LOG_MESSAGE_STATUS_RSP_LEN,
                                      (const uint8_t *)tmp_buff);
           if(SL_STATUS_OK == st){
-              sl_app_log("Sent Status response\r\n");
+              app_log("Sent Status response\r\n");
           }
         }
         #endif // SL_BTMESH_DATA_LOG_RSP_ENABLE
@@ -436,7 +436,7 @@ static void sli_btmesh_data_log_recv_timeout_callback(
   if(SL_BTMESH_DATA_LOG_BUSY == sli_recv_status){
       sli_data_log_ptr->index = SL_BTMESH_DATA_LOG_RESET_VAL;
       sli_recv_status = SL_BTMESH_DATA_LOG_IDLE;
-      sl_app_log("Log receive timeout!\r\n");
+      app_log("Log receive timeout!\r\n");
   }
 }
 

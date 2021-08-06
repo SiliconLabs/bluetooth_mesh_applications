@@ -31,9 +31,9 @@
 extern "C" {
 #endif
 
-#include "sl_app_assert.h"
+#include "app_assert.h"
 #include "sl_sleeptimer.h"
-#include "sl_app_log.h"
+#include "app_log.h"
 #include "sl_btmesh_data_logging_server.h"
 
 #include "nvm3.h"
@@ -196,7 +196,7 @@ sl_status_t sl_btmesh_data_log_server_init(void)
       properties.sample_rate = SL_BTMESH_DATA_LOG_SAMPLE_RATE_MS_CFG_VAL;
       properties.threshold = SL_BTMESH_DATA_LOG_THESHOLD_CFG_VAL;
       ec = data_log_write_properties(&properties);
-      sl_app_assert(ec == ECODE_NVM3_OK,
+      app_assert(ec == ECODE_NVM3_OK,
                 "[E: 0x%08x] Failed to create NVM storage\n",
                 (int)ec);
   }
@@ -260,7 +260,7 @@ static sl_status_t sli_btmesh_data_log_send(sl_data_frame_t *frame,
                             SL_BTMESH_SEGMENT_CONTI,
                             SL_BTMESH_DATA_LOG_INFO_LENGTH,
                             (const uint8_t *)&(frame->header.last));
-  sl_app_assert(st == SL_STATUS_OK,
+  app_assert(st == SL_STATUS_OK,
                 "[E: 0x%04x] Failed to set Log info publication\n",
                 (int)st);
 
@@ -274,7 +274,7 @@ static sl_status_t sli_btmesh_data_log_send(sl_data_frame_t *frame,
                               SL_BTMESH_SEGMENT_FINAL,
                               len,
                               (const uint8_t *)frame->data);
-    sl_app_assert(st == SL_STATUS_OK,
+    app_assert(st == SL_STATUS_OK,
                   "[E: 0x%04x] Failed to set Log publication\n",
                   (int)st);
 
@@ -283,7 +283,7 @@ static sl_status_t sli_btmesh_data_log_send(sl_data_frame_t *frame,
       st = sl_btmesh_vendor_model_publish(SL_BTMESH_DATA_LOG_ELEMENT_CFG_VAL,
                                           SL_BTMESH_VENDOR_ID,
                                           SL_BTMESH_DATA_LOG_MODEL_SERVER_ID);
-      sl_app_assert(st == SL_STATUS_OK,
+      app_assert(st == SL_STATUS_OK,
                   "[E: 0x%04x] Failed to send Log publication\n",
                   (int)st);
     }
@@ -374,7 +374,7 @@ sl_status_t sl_btmesh_data_log_server_send_data(sl_data_log_data_t *data)
                             SL_BTMESH_SEGMENT_FINAL,
                             sizeof(sl_data_log_data_t),
                             (const uint8_t *)data);
-  sl_app_assert(st == SL_STATUS_OK,
+  app_assert(st == SL_STATUS_OK,
                 "[E: 0x%04x] Failed to set data publication\n",
                 (int)st);
 
@@ -383,7 +383,7 @@ sl_status_t sl_btmesh_data_log_server_send_data(sl_data_log_data_t *data)
     st = sl_btmesh_vendor_model_publish(SL_BTMESH_DATA_LOG_ELEMENT_CFG_VAL,
                                         SL_BTMESH_VENDOR_ID,
                                         SL_BTMESH_DATA_LOG_MODEL_SERVER_ID);
-    sl_app_assert(st == SL_STATUS_OK,
+    app_assert(st == SL_STATUS_OK,
                 "[E: 0x%04x] Failed to publish data\n",
                 (int)st);
   }
@@ -416,7 +416,7 @@ sl_status_t sl_btmesh_data_log_server_send_status(void)
       }
   } else {
       st = SL_STATUS_EMPTY;
-      sl_app_log("The Log is empty\r\n");
+      app_log("The Log is empty\r\n");
   } // The log is empty
 
   return st;
@@ -501,7 +501,7 @@ sl_status_t sli_btmesh_data_log_send_handler(void)
               sli_send_count = SL_BTMESH_DATA_LOG_RESET_VAL;
               sli_send_status = SL_BTMESH_DATA_LOG_IDLE;
               is_sending_started = false;
-              sl_app_log("Failed to send Log\r\n");
+              app_log("Failed to send Log\r\n");
               return st;
           }
       } else { // (sli_send_count == 1) Last segment
@@ -519,7 +519,7 @@ sl_status_t sli_btmesh_data_log_send_handler(void)
               sli_send_count = SL_BTMESH_DATA_LOG_RESET_VAL;
               sli_send_status = SL_BTMESH_DATA_LOG_IDLE;
               is_sending_started = false;
-              sl_app_log("Failed to send last Log\r\n");
+              app_log("Failed to send last Log\r\n");
               return st;
           }
       }
@@ -579,7 +579,7 @@ sl_status_t sl_btmesh_data_log_append(sl_data_log_data_t *data)
       return SL_STATUS_FULL;
   } else {
       // Execute overflow callback function
-      sl_app_log("The log exceeds limit!");
+      app_log("The log exceeds limit!");
       sl_btmesh_data_log_ovf_callback();
   }
 
@@ -676,7 +676,7 @@ static void sli_btmesh_data_log_timeout_callback(
       sli_send_count = SL_BTMESH_DATA_LOG_RESET_VAL;
       sli_send_status = SL_BTMESH_DATA_LOG_IDLE;
       is_sending_started = false;
-      sl_app_log("Log sent timeout!\r\n");
+      app_log("Log sent timeout!\r\n");
   }
 }
 
@@ -737,7 +737,7 @@ static sl_status_t sli_btmesh_data_log_update_period(
                 NO_FLAGS);
 
     if(SL_STATUS_OK == st){
-        sl_app_log("Period is updated: %d\r\n",
+        app_log("Period is updated: %d\r\n",
                    period);
     }
   }
@@ -775,7 +775,7 @@ static sl_status_t sli_btmesh_data_log_update_sample_rate(
                 NO_FLAGS);
 
     if(SL_STATUS_OK == st){
-        sl_app_log("Sample rate is updated: %d\r\n", rate);
+        app_log("Sample rate is updated: %d\r\n", rate);
     }
   }
   return st;
@@ -800,7 +800,7 @@ static sl_status_t sli_btmesh_data_log_update_threshold(
                     sizeof(sl_btmesh_data_log_threshold_t)))
   {
     st = data_log_save_threshold(threshold);
-    sl_app_log("Threshold is updated: %d\r\n", threshold);
+    app_log("Threshold is updated: %d\r\n", threshold);
     return st;
   } else { return SL_STATUS_FAIL; }
 }
@@ -839,11 +839,11 @@ static sl_status_t data_log_save_period(sl_btmesh_data_log_period_t period)
       // Write back to NVM
       ec = data_log_write_properties(&properties);
       if(ECODE_NVM3_OK != ec){
-          sl_app_log("Failed to save period: 0x%08x\r\n", ec);
+          app_log("Failed to save period: 0x%08x\r\n", ec);
           return SL_STATUS_FAIL;
       }
   } else {
-      sl_app_log("Failed to save period: 0x%08x\r\n", ec);
+      app_log("Failed to save period: 0x%08x\r\n", ec);
       return SL_STATUS_FAIL;
   }
 
@@ -872,11 +872,11 @@ static sl_status_t data_log_save_sample_rate(
       // Write back to NVM
       ec = data_log_write_properties(&properties);
       if(ECODE_NVM3_OK != ec){
-          sl_app_log("Failed to save sample rate: 0x%08x\r\n", ec);
+          app_log("Failed to save sample rate: 0x%08x\r\n", ec);
           return SL_STATUS_FAIL;
       }
   } else {
-      sl_app_log("Failed to save sample rate: 0x%08x\r\n", ec);
+      app_log("Failed to save sample rate: 0x%08x\r\n", ec);
       return SL_STATUS_FAIL;
   }
 
@@ -905,11 +905,11 @@ static sl_status_t data_log_save_threshold(
       // Write back to NVM
       ec = data_log_write_properties(&properties);
       if(ECODE_NVM3_OK != ec){
-          sl_app_log("Failed to save threshold: 0x%08x\r\n", ec);
+          app_log("Failed to save threshold: 0x%08x\r\n", ec);
           return SL_STATUS_FAIL;
       }
   } else {
-      sl_app_log("Failed to save threshold: 0x%08x\r\n", ec);
+      app_log("Failed to save threshold: 0x%08x\r\n", ec);
       return SL_STATUS_FAIL;
   }
 
@@ -934,7 +934,7 @@ static sl_status_t data_log_read_period(sl_btmesh_data_log_period_t *period)
       *period = properties.period;
       return SL_STATUS_OK;
   } else {
-     sl_app_log("Failed to read period: 0x%08x", ec);
+     app_log("Failed to read period: 0x%08x", ec);
   }
 
   return SL_STATUS_FAIL;
@@ -959,7 +959,7 @@ static sl_status_t data_log_read_sample_rate(
       *rate = properties.sample_rate;
       return SL_STATUS_OK;
   } else {
-     sl_app_log("Failed to read sample rate: 0x%08x", ec);
+     app_log("Failed to read sample rate: 0x%08x", ec);
   }
 
   return SL_STATUS_FAIL;
@@ -984,7 +984,7 @@ static sl_status_t data_log_read_threshold(
       *threshold = properties.threshold;
       return SL_STATUS_OK;
   } else {
-     sl_app_log("Failed to read threshold: 0x%08x", ec);
+     app_log("Failed to read threshold: 0x%08x", ec);
   }
 
   return SL_STATUS_FAIL;

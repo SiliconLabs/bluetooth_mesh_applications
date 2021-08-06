@@ -32,8 +32,8 @@
 extern "C" {
 #endif
 #include "em_common.h"
-#include "sl_app_assert.h"
-#include "sl_app_log.h"
+#include "app_assert.h"
+#include "app_log.h"
 #include "sl_status.h"
 
 #include "sl_btmesh_temperature.h"
@@ -96,7 +96,7 @@ static sl_status_t sli_btmesh_temperature_si70xx_init(void)
   sc = sl_si70xx_init(SL_BTMESH_I2CSPM_INST,
                       SL_BTMESH_TEMPERATURE_SI70XX_ADDR);
   if(!sl_si70xx_present(SL_BTMESH_I2CSPM_INST, SL_BTMESH_I2CSPM_ADDR, &device_id)){
-      sl_app_log("Temp sensor is not available");
+      app_log("Temp sensor is not available");
   }
 
   return sc;
@@ -125,7 +125,7 @@ static sl_status_t sli_btmesh_temperature_si70xx_get_rht(temperature_8_t *temp,
                                      SL_BTMESH_I2CSPM_ADDR,
                                      &rhData,
                                      &tData);
-  sl_app_assert(sc != SL_STATUS_FAIL,
+  app_assert(sc != SL_STATUS_FAIL,
                 "[E: 0x%04x] Failed to get temperature\n",
                 (int)sc);
 
