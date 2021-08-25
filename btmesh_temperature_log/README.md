@@ -60,55 +60,55 @@ To create project for the other EFR32 devices, do the following steps:
 1)   Create two SOC-Empty examples for server/client node and name it accordingly (Ex: "soc_btmesh_data_logging_server", "soc_btmesh_data_logging_client").
 
 2)   Open configurator and install following software components for both server and client node:
-    - Application->Service->Simple timer service
+- Application->Service->Simple timer service
 
-    ![App_Service](doc/App_Service.png)
+![App_Service](doc/App_Service.png)
 
-    - Application->Utility->Assert
-    - Application->Utility->Log
+- Application->Utility->Assert
+- Application->Utility->Log
 
-    ![App_Utility](doc/App_Utility.png)
+![App_Utility](doc/App_Utility.png)
 
-    - Bluetooth Mesh->Features->Proxy
-    - Bluetooth Mesh->Features->Relay
+- Bluetooth Mesh->Features->Proxy
+- Bluetooth Mesh->Features->Relay
 
-    ![BTMesh_Features](doc/BTMesh_Features.png)
+![BTMesh_Features](doc/BTMesh_Features.png)
 
-    - Bluetooth Mesh->Stack Classes->GATT Provisioning Bearer
-    - Bluetooth Mesh->Stack Classes->Vendor Model
+- Bluetooth Mesh->Stack Classes->GATT Provisioning Bearer
+- Bluetooth Mesh->Stack Classes->Vendor Model
 
-    ![BTMesh_Stack_Classes](doc/BTMesh_Stack_Classes.png)
+![BTMesh_Stack_Classes](doc/BTMesh_Stack_Classes.png)
 
-    - Bluetooth Mesh->Utility->App Utility
-    - Bluetooth Mesh->Utility->Button Press
-    - Bluetooth Mesh->Utility->Factory Reset
-    - Bluetooth Mesh->Utility->Provisioning Decorator
+- Bluetooth Mesh->Utility->App Utility
+- Bluetooth Mesh->Utility->Button Press
+- Bluetooth Mesh->Utility->Factory Reset
+- Bluetooth Mesh->Utility->Provisioning Decorator
 
-    ![BTMesh_Utility](doc/BTMesh_Utility.png)
+![BTMesh_Utility](doc/BTMesh_Utility.png)
 
-    - Platform->Driver->Simple Button Core
-    - Platform->Driver->Simple LED Core
-    
-    ![Platform_Driver](doc/Platform_Driver.png)
+- Platform->Driver->Simple Button Core
+- Platform->Driver->Simple LED Core
 
-    - Add new instance for btn1 and led1.
+![Platform_Driver](doc/Platform_Driver.png)
 
-    ![Platform_Driver_bt_led](doc/Platform_Driver_bt_led.png)
+- Add new instance for btn1 and led1.
 
-    - Services->NVM3->NVM3 Core
-    - Services->NVM3->NVM3 Default Instance
+![Platform_Driver_bt_led](doc/Platform_Driver_bt_led.png)
 
-    ![Services_NVM3](doc/Services_NVM3.png)
+- Services->NVM3->NVM3 Core
+- Services->NVM3->NVM3 Default Instance
 
-    With the server node, if the board has the Si70xx - Temperature/Humidity Sensor presented you can install Si70xx component get temperature/humidity as logging data.
+![Services_NVM3](doc/Services_NVM3.png)
 
-    - Platform->Board Drivers->Si70xx - Temperature/Humidity Sensor
+With the server node, if the board has the Si70xx - Temperature/Humidity Sensor presented you can install Si70xx component get temperature/humidity as logging data.
 
-    ![Platform_Si70xx_Driver](doc/Platform_Si70xx_Driver.png)
+- Platform->Board Drivers->Si70xx - Temperature/Humidity Sensor
 
-    - Platform->Driver->I2CSPM  with instance name as "temperature_env"
+![Platform_Si70xx_Driver](doc/Platform_Si70xx_Driver.png)
 
-    ![Platform_Driver_I2cpm](doc/Platform_Driver_I2cpm.png)
+- Platform->Driver->I2CSPM  with instance name as "temperature_env"
+
+![Platform_Driver_I2cpm](doc/Platform_Driver_I2cpm.png)
 
 
 3)   Copy source files to created projects.
