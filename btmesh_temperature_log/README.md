@@ -111,7 +111,7 @@ With the server node, if the board has the Si70xx - Temperature/Humidity Sensor 
 ![Platform_Driver_I2cpm](doc/Platform_Driver_I2cpm.png)
 
 
-3)   Copy source files to created projects.
+3)   Copy source files to the created projects.
 - Server node:
   > src/sl_btmesh_data_logging_capi.c
   
@@ -144,9 +144,9 @@ With the server node, if the board has the Si70xx - Temperature/Humidity Sensor 
   
   > Copy all contains of the src/app_client.c to app.c on client project.
 
-    If board has Si70xx sensor available then un-comments the line which contains macro 
+If board has Si70xx sensor available then un-comments the line which contains macro "#define SL_BTMESH_TEMPERATURE_SI70XX_PRESENT" in the sl_btmesh_temperature_config.h file.
 
-"#define SL_BTMESH_TEMPERATURE_SI70XX_PRESENT" in the sl_btmesh_temperature_config.h file.
+![source_code](doc/source_code.png)
 
 ## Special Notes ##
 
