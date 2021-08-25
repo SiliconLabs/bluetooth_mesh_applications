@@ -6,7 +6,7 @@ This demo shows how to use Silicon Labs Bluetooth Mesh Vendor Model to send data
 
 ## Gecko SDK version ##
 
-Bluetooth SDK 3.1.1, Bluetooth Mesh 2.0.1
+Bluetooth SDK 3.1.2, Bluetooth Mesh 2.0.2
 
 ## Hardware Required ##
 
@@ -40,8 +40,10 @@ The client could set the pre-compiled timing for data sample (set sample rate) a
 
 ## .sls Projects Used ##
 
-soc_btmesh_data_logging_server_xg21.sls
-soc_btmesh_data_logging_client_xg21.sls
+- soc_btmesh_data_logging_server_xg21.sls
+- soc_btmesh_data_logging_client_xg21.sls
+
+Toolchain: GNU ARM v10.2.1
 
 ## How to Port to Another Part ##
 
@@ -49,12 +51,105 @@ You will get a Data Log example for Wireless STK Mainboard + EFR32xG21 Radio Boa
 
 1)   Open Simplicity Studio, then click [File] -> [Import], 
 
-2)   Choose soc_btmesh_data_logging_server_xg21.sls
-            soc_btmesh_data_logging_client_xg21.sls
+2)   Choose soc_btmesh_data_logging_server_xg21.sls/soc_btmesh_data_logging_client_xg21.sls
 
-3)   the project is imported to your IDE
+3)   The project is imported to your IDE
+
+To create project for the other EFR32 devices, do the following steps:
+
+1)   Create two SOC-Empty examples for server/client node and name it accordingly (Ex: "soc_btmesh_data_logging_server", "soc_btmesh_data_logging_client").
+
+2)   Open configurator and install following software components for both server and client node:
+    - Application->Service->Simple timer service
+
+    ![App_Service](doc/App_Service.png)
+
+    - Application->Utility->Assert
+    - Application->Utility->Log
+
+    ![App_Utility](doc/App_Utility.png)
+
+    - Bluetooth Mesh->Features->Proxy
+    - Bluetooth Mesh->Features->Relay
+
+    ![BTMesh_Features](doc/BTMesh_Features.png)
+
+    - Bluetooth Mesh->Stack Classes->GATT Provisioning Bearer
+    - Bluetooth Mesh->Stack Classes->Vendor Model
+
+    ![BTMesh_Stack_Classes](doc/BTMesh_Stack_Classes.png)
+
+    - Bluetooth Mesh->Utility->App Utility
+    - Bluetooth Mesh->Utility->Button Press
+    - Bluetooth Mesh->Utility->Factory Reset
+    - Bluetooth Mesh->Utility->Provisioning Decorator
+
+    ![BTMesh_Utility](doc/BTMesh_Utility.png)
+
+    - Platform->Driver->Simple Button Core
+    - Platform->Driver->Simple LED Core
+    
+    ![Platform_Driver](doc/Platform_Driver.png)
+
+    - Add new instance for btn1 and led1.
+
+    ![Platform_Driver_bt_led](doc/Platform_Driver_bt_led.png)
+
+    - Services->NVM3->NVM3 Core
+    - Services->NVM3->NVM3 Default Instance
+
+    ![Services_NVM3](doc/Services_NVM3.png)
+
+    With the server node, if the board has the Si70xx - Temperature/Humidity Sensor presented you can install Si70xx component get temperature/humidity as logging data.
+
+    - Platform->Board Drivers->Si70xx - Temperature/Humidity Sensor
+
+    ![Platform_Si70xx_Driver](doc/Platform_Si70xx_Driver.png)
+
+    - Platform->Driver->I2CSPM  with instance name as "temperature_env"
+
+    ![Platform_Driver_I2cpm](doc/Platform_Driver_I2cpm.png)
+
+
+3)   Copy source files to created projects.
+- Server node:
+  > src/sl_btmesh_data_logging_capi.c
+  
+  > src/sl_btmesh_data_logging_server.c
+  
+  > inc/sl_btmesh_data_logging_capi.h
+  
+  > inc/sl_btmesh_data_logging_config.h
+  
+  > inc/sl_btmesh_data_logging_server.h
+  
+  > temperature/src/sl_btmesh_temperature.c
+  
+  > temperature/inc/sl_btmesh_temperature.h
+  
+  > temperature/inc/sl_btmesh_temperature_config.h
+  
+  > Copy all contains of the src/app_server.c to app.c on server project.
+  
+- Client node:
+  > src/sl_btmesh_data_logging_capi.c
+  
+  > src/sl_btmesh_data_logging_client.c
+  
+  > inc/sl_btmesh_data_logging_capi.h
+  
+  > inc/sl_btmesh_data_logging_config.h
+  
+  > inc/sl_btmesh_data_logging_client.h
+  
+  > Copy all contains of the src/app_client.c to app.c on client project.
+
+    If board has Si70xx sensor available then un-comments the line which contains macro 
+
+"#define SL_BTMESH_TEMPERATURE_SI70XX_PRESENT" in the sl_btmesh_temperature_config.h file.
 
 ## Special Notes ##
 
 The current implementation supports one vendor model that is added on main element only.
+
 This application example just uses simple data type int8_t for the log. User can modify to log for the different data types (Ex. temperature, humidity...).
