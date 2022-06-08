@@ -210,6 +210,7 @@ void vl53l1x_app_process_sampling_data(void)
         break;
       default:
         log_error("Unknown range status: %d\r\n", range_status);
+        break;
     }
     // add new ranged distance sample to the people counting algorithm
     process_people_counting_data(distance, zone);

@@ -46,6 +46,10 @@ You can either import the provided `btmesh_room_monitor_friend.slcp` project fil
     - Configure **[Bluetooth Mesh] > [Bluetooth Mesh Stack] > [Maximum number of Friendships allowed]** is 4
         ![Maximum number of Friendships allowed](images/bluetooth_mesh_number_of_friendships.png)
 
+6. Build and flash the project to your device.
+
+*Note*: You need to create the bootloader project and flash it to the device before flashing the application. When flash the application image to the device, use the .hex or .s37 output file. Flashing the .bin files may overwrite (erase) the bootloader.
+
 ## How it works
 
 ### Bluetooth mesh node initialization

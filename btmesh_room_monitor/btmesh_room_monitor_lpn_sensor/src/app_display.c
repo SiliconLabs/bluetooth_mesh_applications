@@ -43,6 +43,8 @@
 #include "glib.h"
 #include "app_display.h"
 
+#define LINE_MAX_CHAR (8)
+
 enum DISPLAY_PAGE {
   DISPLAY_PAGE_NONE,
   DISPLAY_PAGE_UNPROVISIONED,
@@ -193,7 +195,7 @@ void app_display_show_people_count(uint32_t people_count)
 
   // To keep the people count number in the middle of the screen
   n = snprintf(number_str, sizeof(number_str), "%lu", people_count);
-  #define LINE_MAX_CHAR (8)
+  
   if (n < LINE_MAX_CHAR) {
     const char blank[] = "         ";
     int n_blank = (LINE_MAX_CHAR - n) / 2;

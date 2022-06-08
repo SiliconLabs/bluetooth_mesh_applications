@@ -70,6 +70,8 @@ You can either import the provided `btmesh_room_monitor_lpn_sensor.slcp` project
     - Install **[Bluetooth Mesh] > [Models] > [Sensors] > [Sensor Server]**.
     - Install **[Bluetooth Mesh] > [Utility] > [People Count Sensor]**.
 
+7. Build and flash the project to your device.
+
 ## How it works
 
 ### LPN Sensor initialization
