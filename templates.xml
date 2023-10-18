@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ASCII"?><model:MDescriptors xmlns:model="http://www.silabs.com/ss/Studio.ecore">
+  <descriptors name="btmesh_enocean_switch_proxy_server" label="Bluetooth Mesh - EnOcean Switch Proxy Server" description="This project implements a proxy server that translates the BLE telegrams sent from an EnOcean PTM 215B switch to standardized Bluetooth Mesh messages.">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="universal\ configurator"/>
+    <properties key="solutionReferenceId" value="btmesh_enocean_switch_proxy_server.SimplicityStudio.btmesh_enocean_switch_proxy_server.slcp"/>
+    <properties key="projectFilePaths" value="btmesh_enocean_switch_proxy_server/SimplicityStudio/btmesh_enocean_switch_proxy_server.slcp"/>
+    <properties key="readmeFiles" value="btmesh_enocean_switch_proxy_server/README.md"/>
+    <properties key="boardCompatibility" value="brd4180b brd4181a brd4182a"/>
+    <properties key="partCompatibility" value=".*efr32[bm]g22.* .*efr32[bm]g21.*"/>
+    <properties key="ideCompatibility" value="iar-embedded-workbench makefile-ide simplicity-ide visual-studio-code"/>
+    <properties key="ideCompatibility" value="iar-embedded-workbench makefile-ide segger-embedded-studio simplicity-ide"/>
+    <properties key="toolchainCompatibility" value="gcc iar segger"/>
+    <properties key="category" value="Bluetooth Examples"/>
+    <properties key="quality" value="EXPERIMENTAL"/>
+    <properties key="filters" value="Capability|Machine\ Learning Device\ Type|SoC MCU|32-bit\ MCU Project\ Difficulty|Advanced Wireless\ Technology|Bluetooth Mesh"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+  </descriptors>
+</model:MDescriptors>

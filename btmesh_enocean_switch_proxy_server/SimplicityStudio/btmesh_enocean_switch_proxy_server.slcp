@@ -1,0 +1,87 @@
+project_name: btmesh_enocean_switch_proxy_server
+description: >
+  This project demonstrates how the enocean_proxy component can be included in an app
+
+filter:
+- name: Device Type
+  value: [SoC]
+- name: Wireless Technology
+  value: [Bluetooth Mesh]
+
+package: Btmesh
+quality: experimental
+
+readme:
+- path: ../README.md
+
+source:
+- path: ../src/app.c
+- path: ../src/main.c
+
+include:
+- path: ../inc
+  file_list:
+  - path: app.h
+
+component:
+- id: btmesh_stack_relay
+- id: btmesh_stack_node
+- id: btmesh_provisionee
+- id: mpu
+- id: btmesh_stack_generic_server
+- id: rail_util_pti
+- id: btmesh_proxy
+- id: iostream_usart
+  instance: [vcom]
+- id: btmesh_stack
+- id: btmesh_stack_gatt_prov_bearer
+- id: app_assert
+- id: btmesh_factory_reset
+- id: simple_button
+  instance: [btn0, btn1]
+- id: btmesh_wstk_lcd
+- id: app_button_press
+- id: services_enocean_switch_proxy_server
+  from: third_party_hw_drivers
+
+other_file:
+  - path: ../image/connection.png
+    directory: image
+  - path: ../image/create_example.png
+    directory: image
+  - path: ../image/EnOceanEasyfit.png
+    directory: image
+  - path: ../image/sdk_extension.png
+    directory: image
+  - path: ../image/result.GIF
+    directory: image
+
+sdk_extension:
+  - id: third_party_hw_drivers
+    version: 1.8.0
+
+configuration:
+- name: SL_BTMESH_CONFIG_MAX_PROV_BEARERS
+  value: '3'
+- name: SL_HEAP_SIZE
+  value: '0x3000'
+- name: SL_PSA_KEY_USER_SLOT_COUNT
+  value: '0'
+  condition: [psa_crypto]
+- name: SL_STACK_SIZE
+  value: '0x1200'
+- name: SL_IOSTREAM_USART_VCOM_CONVERT_BY_DEFAULT_LF_TO_CRLF
+  value: '1'
+- name: SL_BOARD_ENABLE_VCOM
+  value: '1'
+- name: SL_BOARD_ENABLE_DISPLAY
+  value: '1'
+
+template_contribution:
+  - name: "max_num_switches"
+    value: 10
+
+ui_hints:
+  highlight:
+  - path: README.md
+    focus: true
